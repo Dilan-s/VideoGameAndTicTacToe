@@ -28,7 +28,7 @@ public class GameTree implements GameTreeInterface {
   private int sizeTree(GameTreeNode node) {
 
     int size = 1;
-    for (GameTreeNode g : root.getChildren()) {
+    for (GameTreeNode g : node.getChildren()) {
     	size += sizeTree(g);
     }
     return size;
@@ -49,7 +49,6 @@ public class GameTree implements GameTreeInterface {
       Board b = node.getBoard();
       char nextMark = b.getTurn();
       GenericList<GameTreeNode> children = node.getChildren();
-      List<Board> emptySpaces = new ArrayList<>();
       for (int i = 1; i <= 9; i++) {
         Board copy = b.makeCopy();
         try {
@@ -58,14 +57,11 @@ public class GameTree implements GameTreeInterface {
         } catch (GameException e){
         	continue;
 				}
-        emptySpaces.add(copy);
+        GameTreeNode newNode = new GameTreeNode(copy);
+        children.add(children.size() + 1, newNode);
+        expandTree(newNode);
       }
-      for (int i = 0; i < emptySpaces.size(); i++) {
-				Board boardCopies = emptySpaces.get(i);
-        GameTreeNode newNode = new GameTreeNode(boardCopies);
-				expandTree(newNode);
-				children.add(i, newNode);
-      }
+
     }
   }
 

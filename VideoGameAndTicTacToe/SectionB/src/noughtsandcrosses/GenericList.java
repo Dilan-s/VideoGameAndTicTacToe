@@ -46,22 +46,18 @@ public class GenericList<T> implements GenericListInterface<T> {
   //post: Adds the given item at the given position in the list. It throughs an exception if the
   //      position is out of bound.
   public void add(int pos, T item) throws ListIndexOutOfBoundsException {
-    if (pos > this.size()) {
-      throw new ListIndexOutOfBoundsException("Out of bounds");
-    }
-    ListNode<T> newNode = new ListNode<>(item);
-    if (pos == 0) {
-			head = newNode;
-		} else if (pos == this.size()) {
-      ListNode<T> pred = find(pos-1);
-      pred.setNext(newNode);
+    if (pos == 1) {
+      ListNode<T> oldHead = head;
+      head = new ListNode<>(item, oldHead);
+      numItems++;
+    } else if (pos >= 2 && pos <= numItems + 1) {
+      ListNode<T> prev = find(pos - 1);
+      ListNode<T> curr = new ListNode<>(item, prev.getNext());
+      prev.setNext(curr);
+      numItems++;
     } else {
-      ListNode<T> pred = find(pos - 1);
-      ListNode<T> curr = find(pos);
-      pred.setNext(newNode);
-      newNode.setNext(curr);
+      throw new ListIndexOutOfBoundsException("position out of range in add method of a list");
     }
-		numItems++;
   }// end add
 
   //post: Removes the item at the given position in the list. It throughs an exceptions if the
